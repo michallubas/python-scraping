@@ -1,4 +1,16 @@
 # Your code here
+import requests
+
+
+# task 1
+def make_right_get():
+    headers = {
+        'Accept': 'application/json'
+    }
+    url = 'https://europe-west1-dataimpact-preproduction.cloudfunctions.net/recruitement_test_requests?task=1'
+    r = requests.get(url, headers=headers)
+    return r.json()
+
 
 # task 4
 class CacheDecorator:
