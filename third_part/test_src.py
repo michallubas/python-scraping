@@ -17,6 +17,11 @@ def test_drive():
     with WebDriver() as driver:
         uri = "https://www.woolworths.com.au/shop/browse/drinks/cordials-juices-iced-teas/iced-teas"
         driver.get(uri)
-        assert 'Woolworths Supermarket - Buy Groceries Online' in driver.title
+        assert  driver.title == 'Iced Teas | Woolworths'
+
+        uri = "https://www.edeka24.de/Lebensmittel/Suess-Salzig/Schokoriegel/"
+        driver.get(uri)
+        assert 'EDEKA24 | Schokoriegel' in driver.title
+
         driver.quit()
 

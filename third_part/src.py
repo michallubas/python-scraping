@@ -23,6 +23,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import StaleElementReferenceException, ElementNotInteractableException
 import csv
+import time
 
 
 class WebDriver:
@@ -50,29 +51,59 @@ class WebDriver:
         self.driver.quit()
 
 
-with WebDriver() as driver:
-    uri = "https://www.woolworths.com.au/shop/browse/drinks/cordials-juices-iced-teas/iced-teas"
-    driver.get(uri)
+def run_woolworths():
+    with WebDriver() as driver:
+        uri = "https://www.woolworths.com.au/shop/browse/drinks/cordials-juices-iced-teas/iced-teas"
+        driver.get(uri)
 
-    # breadcrumb parts
-    li_elements = driver.find_elements(By.CLASS_NAME, 'breadcrumbs-link.fs.ng-star-inserted')
-    breadcrumb_list = list()
-    for li_item in li_elements:
-        breadcrumb_list.append(li_item.text)
+        print(driver.title)
+        # breadcrumb parts
+        li_elements = driver.find_elements(By.CLASS_NAME, 'breadcrumbs-link.fs.ng-star-inserted')
+        breadcrumb_list = list()
+        for li_item in li_elements:
+            breadcrumb_list.append(li_item.text)
 
-    # stopper, can be beautifier later with WebDriverWait
-    elements_stopper = driver.find_elements(By.XPATH,
-                                    '//*[@id="search-content"]/div/shared-grid/div/div[2]/shared-product-tile/shared-web-component-wrapper/wc-product-tile//section/div/div[1]/div/div')
+        # stopper, can be beautifier later with WebDriverWait
+        elements_stopper = driver.find_elements(By.XPATH,
+                                        '//*[@id="search-content"]/div/shared-grid/div/div[2]/shared-product-tile/shared-web-component-wrapper/wc-product-tile//section/div/div[1]/div/div')
 
-    elements = driver.find_elements(By.CLASS_NAME, 'product-grid-v2--tile')
+        elements = driver.find_elements(By.CLASS_NAME, 'product-grid-v2--tile')
 
-    titles = list()
-    for element_object in elements:
-        title = element_object.text.split('\n')[3]
-        titles.append(title)
+        titles = list()
+        for element_object in elements:
+            title = element_object.text.split('\n')[3]
+            titles.append(title)
 
-    # write list to CSV file
-    filename = str(breadcrumb_list) + '.csv'
-    with open(filename, mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(titles)
+        # write list to CSV file
+        filename = str(breadcrumb_list) + '.csv'
+        with open(filename, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(titles)
+
+
+run_woolworths()
+
+# Task 3
+def run_edeka24():
+    with WebDriver() as driver:
+
+        uri = "https://www.edeka24.de/Lebensmittel/Suess-Salzig/Schokoriegel/"
+        driver.get(uri)
+
+        time.sleep(5)
+
+        # Accept all cookies button is inside the shadow dom
+        shadow_root = driver.find_element(By.CSS_SELECTOR, "#usercentrics-root").shadow_root
+        shadow_root.find_element(By.CSS_SELECTOR, 'button[data-testid="uc-accept-all-button"]').click()
+
+        # Locate the element containing the image
+        elements = driver.find_elements(By.CLASS_NAME, 'product-item')
+        titles = list()
+        for element_object in elements:
+            title = element_object.text.split('\n')
+            if len(title) == 3:
+                titles.append(title[0])
+            else:
+                titles.append(title[1])
+
+        return {'site_title': driver.title, 'products': titles}
