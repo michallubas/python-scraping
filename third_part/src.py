@@ -1,20 +1,40 @@
+import gzip
+import json
 
 
+# Task 1 / needs to be improve, take types from #menu__departamento-1,2,3,4 etc
 def parse_categories():
     categories = []
+    file_path = 'categories.json.gz'
+    with gzip.open(file_path, 'rt', encoding='utf-8') as file:
+        json_str = file.read()
+        categories_dict = json.loads(json_str)
+        for key in categories_dict.keys():
 
-    def get_categories_recursive():
-        # TODO: Your code here
-        pass
+            if categories_dict[key].get('props') and categories_dict[key]['props'].get('items'):
+                items = categories_dict[key]['props']['items']
+                categories_list = items[0]['itemProps']['href'].split('/')[1:]
+                categories_list = [name.replace('-', ' ') for name in categories_list]
 
-    get_categories_recursive()
+                # if len(categories_list) == 2 and categories_dict[key]['props']['props'].get('label'):
+                #     categories_list.append(categories_dict[key]['props']['props']['label'])
+
+                word_list_final = list()
+                for word in categories_list:
+
+                    word_list = word.split()
+                    word_list[0] = word_list[0].capitalize()
+                    word_final = ' '.join(word_list)
+                    word_list_final.append(word_final)
+
+                categories.append(word_list_final)
+
     return categories
 
 
-
+print(parse_categories())
 
 # Task 2
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -80,8 +100,6 @@ def run_woolworths():
             writer = csv.writer(file)
             writer.writerow(titles)
 
-
-run_woolworths()
 
 # Task 3
 def run_edeka24():

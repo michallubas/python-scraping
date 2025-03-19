@@ -12,6 +12,26 @@ def make_right_get():
     return r.json()
 
 
+# task 3
+import calendar
+calendar.setfirstweekday(0)
+
+def deco_date(func):
+    def new_func(year, month):
+        day = func(year, month).split(" ")[0]
+        return str(year) + '-' + str(month) + '/' + day
+    return new_func
+
+
+@deco_date
+def return_date(year, month):
+    weeks_list = calendar.monthcalendar(year, month)
+    last_week = weeks_list[-1]
+    last_week = [day for day in last_week if day > 0]
+    first_day = last_week[0]
+
+    return str(first_day) + " " + list(calendar.month_name)[month]
+
 # task 4
 class CacheDecorator:
     """Saves the results of a function according to its parameters"""

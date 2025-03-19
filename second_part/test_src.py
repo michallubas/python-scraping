@@ -1,4 +1,10 @@
+from datetime import date
+
 import pytest
+
+from second_part.src import return_date
+from second_part.src import make_right_get
+
 # from second_part.src import AccessWebsite
 #
 #
@@ -11,7 +17,9 @@ import pytest
 #     with pytest.raises(Exception):
 #         website2.access_website()
 
-from second_part.src import make_right_get
+def test_date():
+    assert return_date(2025,3) == '2025-3/31'
+    assert return_date(2025, 2) == '2025-2/24'
 
 
 def test_response():

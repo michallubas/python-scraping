@@ -1,17 +1,17 @@
 import json
 
-# from src import parse_categories
+from third_part.src import parse_categories
 
 
-# def test_parse_categories():
-#     categories = parse_categories()
-#     with open('./expected_categories.json') as f:
-#         expected_categories = json.load(f)
-#     assert categories == expected_categories
+def test_parse_categories():
+    categories = parse_categories()
+    with open('./expected_categories.json') as f:
+        expected_categories = json.load(f)
+    assert categories == expected_categories
+
+
 
 from third_part.src import WebDriver
-
-
 def test_drive():
 
     with WebDriver() as driver:
@@ -24,4 +24,5 @@ def test_drive():
         assert 'EDEKA24 | Schokoriegel' in driver.title
 
         driver.quit()
+
 
